@@ -69,7 +69,7 @@ class LoginViewModel with ChangeNotifier {
         "password": passwordCon.controller.text,
       };
       await _authRepository.login(body: body);
-      CustomNavigation().pushAndRemoveUntil(const HomeScreen(), animate: false);
+      CustomNavigation().pushAndRemoveUntil(HomeScreen(), animate: false);
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error);
     } finally {

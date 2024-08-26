@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_inkwell.dart';
@@ -18,13 +17,19 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final double loadingSize;
   final Color? borderColor;
+  final double? height;
+  final double? fontSize;
+  final TextStyle? textStyle;
 
   const CustomButton(
       {super.key,
       this.title,
       required this.bgColor,
       this.disableBgColor,
+      this.height,
       this.icon,
+      this.fontSize,
+      this.textStyle,
       this.isEnable = true,
       this.loadingColor = AppColors.whiteColor,
       this.isLoading = false,
@@ -39,7 +44,7 @@ class CustomButton extends StatelessWidget {
       onTap: isEnable ? onPressed : null,
       child: Container(
         width: ScreenUtil().screenWidth,
-        height: inputFieldHeight,
+        height: height ?? inputFieldHeight,
         alignment: Alignment.center,
         decoration: BoxDecoration(
             border: isEnable ? Border.all(color: borderColor ?? bgColor) : null,
@@ -68,8 +73,9 @@ class CustomButton extends StatelessWidget {
                   if (title != null)
                     Text(title!,
                         textAlign: TextAlign.center,
-                        style:
-                            PoppinsStyles.semiBold.copyWith(color: textColor)),
+                        style: textStyle ??
+                            PoppinsStyles.semiBold.copyWith(
+                                color: textColor, fontSize: fontSize ?? 16.sp)),
                 ],
               ),
       ),
