@@ -2,17 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_button.dart';
-import 'package:technical_assessment_flutter/src/core/commons/custom_inkwell.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/views/widgets/beneficiary_shimmer.dart';
 import 'package:technical_assessment_flutter/src/features/home/presentation/views/widgets/add_beneficiary_button.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/presentation/viewmodels/top_up_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/top_up_view.dart';
 
 class BeneficiaryListView extends ConsumerStatefulWidget {
-  const BeneficiaryListView({super.key});
+  final ChangeNotifierProvider<TopUpViewModel> topUpViewModelProvider;
+  final ChangeNotifierProvider<BeneficiaryViewModel>
+      beneficiaryViewModelProvider;
+
+  const BeneficiaryListView(
+      {super.key,
+      required this.topUpViewModelProvider,
+      required this.beneficiaryViewModelProvider});
 
   @override
   ConsumerState<BeneficiaryListView> createState() =>
@@ -20,15 +27,10 @@ class BeneficiaryListView extends ConsumerStatefulWidget {
 }
 
 class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
-  final _beneficiaryViewModelProvider =
-      ChangeNotifierProvider<BeneficiaryViewModel>((ref) {
-    return BeneficiaryViewModel();
-  });
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(_beneficiaryViewModelProvider).initMethod();
+      ref.read(widget.beneficiaryViewModelProvider).initMethod();
     });
 
     super.initState();
@@ -36,7 +38,7 @@ class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
 
   @override
   Widget build(BuildContext context) {
-    final beneficiaryViewModel = ref.watch(_beneficiaryViewModelProvider);
+    final beneficiaryViewModel = ref.watch(widget.beneficiaryViewModelProvider);
     return Expanded(
       child: Column(
         children: [
@@ -104,7 +106,9 @@ class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
                                           color: AppColors.whiteColor),
                                       onPressed: () {
                                         CustomNavigation().push(TopUpView(
-                                            beneficiary: beneficiary));
+                                            beneficiary: beneficiary,
+                                            topUpViewModelProvider:
+                                                widget.topUpViewModelProvider));
                                       },
                                       bgColor: AppColors.primaryColor,
                                     ),
@@ -123,7 +127,7 @@ class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
                 ),
           const Spacer(),
           AddBeneficiaryButton(
-            beneficiaryViewModelProvider: _beneficiaryViewModelProvider,
+            beneficiaryViewModelProvider: widget.beneficiaryViewModelProvider,
           ),
           40.verticalSpace,
         ],

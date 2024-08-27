@@ -1,6 +1,7 @@
-import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/domain/model/top_up.dart';
 
 abstract class TopUpRepository {
-  Future<List<BeneficiaryModel>> getTopUpHistory();
+  Future<List<Transaction>> getTransactionHistory();
+
   Future<void> topUp({required Map<String, dynamic> body});
 }

@@ -10,25 +10,25 @@ import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/utilities/dialog_box.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/domain/model/top_up.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/viewmodels/top_up_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/widgets/amount_grid_view.dart';
-import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/widgets/invoice_view.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/widgets/invoice.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/widgets/notes_form_field.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/widgets/puprpose_dropdown.dart';
 
 class TopUpView extends ConsumerWidget {
   final BeneficiaryModel beneficiary;
+  final ChangeNotifierProvider<TopUpViewModel> topUpViewModelProvider;
 
-  TopUpView({super.key, required this.beneficiary});
-
-  /// Provider for the TopUpViewModel using ChangeNotifierProvider
-  final _topUpViewModelProvider = ChangeNotifierProvider<TopUpViewModel>((ref) {
-    return TopUpViewModel();
-  });
+  const TopUpView(
+      {super.key,
+      required this.beneficiary,
+      required this.topUpViewModelProvider});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final topUpViewModel = ref.watch(_topUpViewModelProvider);
+    final topUpViewModel = ref.watch(topUpViewModelProvider);
     return CustomLoader(
       isLoading: topUpViewModel.isLoading,
       child: Scaffold(
@@ -50,10 +50,9 @@ class TopUpView extends ConsumerWidget {
                 infoTile("Number:", beneficiary.number, AppColors.greyColor),
                 infoTile("Remaining Monthly limit:", "459 AED",
                     AppColors.blackColor),
-                AmountGridView(topUpViewModelProvider: _topUpViewModelProvider),
-                PurposeDropDown(
-                    topUpViewModelProvider: _topUpViewModelProvider),
-                NotesFormField(topUpViewModelProvider: _topUpViewModelProvider),
+                AmountGridView(topUpViewModelProvider: topUpViewModelProvider),
+                PurposeDropDown(topUpViewModelProvider: topUpViewModelProvider),
+                NotesFormField(topUpViewModelProvider: topUpViewModelProvider),
               ],
             ),
           ),
@@ -64,9 +63,18 @@ class TopUpView extends ConsumerWidget {
             isEnable: topUpViewModel.isBtnEnable,
             bgColor: AppColors.primaryColor,
             onPressed: () async {
-              bool? isPayed = await DialogBoxUtils.show(const InvoiceView());
+              Transaction transaction = Transaction(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  userId: 1,
+                  beneficiaryId: beneficiary.id,
+                  amount: topUpViewModel.selectedAmount!,
+                  createdAt: DateTime.now(),
+                  purpose: topUpViewModel.selectedPurpose!,
+                  note: topUpViewModel.notesController.text);
+              bool? isPayed =
+                  await DialogBoxUtils.show(Invoice(transaction: transaction));
               if (isPayed ?? false) {
-                topUpViewModel.topUp();
+                topUpViewModel.topUp(transaction, beneficiary);
               }
             },
             title: "Proceed",

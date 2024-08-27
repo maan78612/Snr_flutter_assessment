@@ -5,19 +5,18 @@ import 'package:technical_assessment_flutter/src/core/commons/custom_inkwell.dar
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/domain/model/top_up.dart';
 
-class InvoiceView extends StatelessWidget {
-  final String productName = "Top Up";
-  final double productPrice = 50.0;
+class Invoice extends StatelessWidget {
+  final Transaction transaction;
+
+  const Invoice({required this.transaction, super.key});
+
   final double serviceCharge = 1.0;
-
-  const InvoiceView({
-    super.key,
-  });
 
   @override
   Widget build(BuildContext context) {
-    double totalPrice = productPrice + serviceCharge;
+    double totalPrice = transaction.amount + serviceCharge;
 
     return Container(
       width: 0.9.sw, // Adjust width to make it wider
@@ -40,13 +39,14 @@ class InvoiceView extends StatelessWidget {
             ],
           ),
           20.verticalSpace,
-          _buildInvoiceRow('Product', productName),
-          _buildInvoiceRow('Price', '${productPrice.toStringAsFixed(2)} AED'),
+          _buildInvoiceRow('Product', "Mobile Recharge"),
+          _buildInvoiceRow(
+              'Price', '${transaction.amount.toStringAsFixed(2)} AED'),
           20.verticalSpace,
           _buildInvoiceRow(
             'Sub total',
             isSemiBold: true,
-            '${productPrice.toStringAsFixed(2)} AED',
+            '${transaction.amount.toStringAsFixed(2)} AED',
             isBold: true,
           ),
 
@@ -113,7 +113,7 @@ class InvoiceView extends StatelessWidget {
         Text(
           "*",
           style: PoppinsStyles.regular.copyWith(
-            fontSize: 16.sp,
+            fontSize: 22.sp,
             color: Colors.red,
           ),
         ),
