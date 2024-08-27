@@ -8,6 +8,17 @@ class TextFieldValidator {
     }
     return null;
   }
+  static String? validatePhoneNumberUAE(String? value) {
+    const String pattern = r'^\+971[0-9]{8,9}$';
+    final RegExp regex = RegExp(pattern);
+
+    if (value == null || value.isEmpty) {
+      return "Phone number is required. Please enter your phone number.";
+    } else if (!regex.hasMatch(value)) {
+      return "Please enter a valid UAE phone number starting with +971 followed by 8 or 9 digits.";
+    }
+    return null;
+  }
 
   // Validate confirm password with enhanced error messages
   static String? validateConfirmPassword(String? value) {

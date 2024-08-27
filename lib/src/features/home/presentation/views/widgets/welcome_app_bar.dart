@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
+import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
+import 'package:technical_assessment_flutter/src/features/home/presentation/views/widgets/staus_badge.dart';
 
 class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WelcomeAppBar({super.key});
@@ -25,53 +27,62 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(AppImages.logo,
-                    width: 80.w,
-                    fit: BoxFit.contain,
-                    color: AppColors.whiteColor),
-                10.horizontalSpace,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Welcome back!",
+                      style: PoppinsStyles.medium.copyWith(
+                          fontSize: 18.sp,
+                          height: 1,
+                          color: AppColors.whiteColor),
+                    ),
+                    7.verticalSpace,
+                    Text(
+                      "Abdul Rehman",
+                      style: PoppinsStyles.bold.copyWith(
+                          fontSize: 24.sp, color: AppColors.whiteColor),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Opacity(
+                  opacity: 0.6,
+                  child: Image.asset(AppImages.logo,
+                      width: 80.w,
+                      fit: BoxFit.contain,
+                      color: AppColors.whiteColor),
+                ),
+              ],
+            ),
+            40.verticalSpace,
+            Row(
+              children: [
                 RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Welcome Back!\n",
+                        text: "Balance : ",
                         style: PoppinsStyles.medium.copyWith(
                             fontSize: 18.sp,
                             height: 1.3,
                             color: AppColors.whiteColor),
                       ),
                       TextSpan(
-                        text: "Abdul Rehman",
-                        style: PoppinsStyles.extraBold.copyWith(
-                            fontSize: 24.sp, color: AppColors.whiteColor),
+                        text: "3400 Aed",
+                        style: PoppinsStyles.bold.copyWith(
+                            fontSize: 18.sp, color: AppColors.whiteColor),
                       ),
                     ],
                   ),
-                )
+                ),
+                const Spacer(),
+                const StatusBadge(status: UserStatus.notVerified),
               ],
             ),
-            20.verticalSpace,
-            RichText(
-              textAlign: TextAlign.start,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Balance : ",
-                    style: PoppinsStyles.medium.copyWith(
-                        fontSize: 18.sp,
-                        height: 1.3,
-                        color: AppColors.whiteColor),
-                  ),
-                  TextSpan(
-                    text: "3400 Aed",
-                    style: PoppinsStyles.bold
-                        .copyWith(fontSize: 18.sp, color: AppColors.whiteColor),
-                  ),
-                ],
-              ),
-            ),
-            20.verticalSpace,
+            10.verticalSpace,
           ],
         ),
       ),
@@ -80,5 +91,5 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(160.h); // Adjust the height as needed
+      Size.fromHeight(170.h); // Adjust the height as needed
 }

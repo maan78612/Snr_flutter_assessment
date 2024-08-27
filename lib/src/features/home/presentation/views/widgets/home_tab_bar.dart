@@ -16,25 +16,44 @@ class HomeTabBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeViewModel = ref.watch(homeViewModelProvider);
+    final selectedIndex = TabBarEnum.values.indexOf(homeViewModel.selectedTab);
 
     return Container(
-      padding: EdgeInsets.all(8.sp),
+      padding: EdgeInsets.all(4.sp),
       margin: EdgeInsets.symmetric(horizontal: hMargin),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.all(Radius.circular(5.r)),
+        borderRadius: BorderRadius.all(Radius.circular(24.r)),
+        color: AppColors.primaryColor.withOpacity(0.2),
       ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: TabBarEnum.values.map((status) {
-            return StatusButton(
-              tabBarEnum: status,
-              isSelected: homeViewModel.selectedTab == status,
-              onTap: () => homeViewModel.setTabView(status),
-            );
-          }).toList(),
-        ),
+      child: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            left:
+                (1.sw - 2 * hMargin) / TabBarEnum.values.length * selectedIndex,
+
+            /// animating the color by adjusting width
+            width: (1.sw - 2 * hMargin) / TabBarEnum.values.length - 8.sp,
+            height: 40.h,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.all(Radius.circular(24.r)),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: TabBarEnum.values.map((status) {
+              return StatusButton(
+                tabBarEnum: status,
+                isSelected: homeViewModel.selectedTab == status,
+                onTap: () => homeViewModel.setTabView(status),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
@@ -55,22 +74,22 @@ class StatusButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5.sp),
-        height: 40.h,
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : Colors.transparent,
-          borderRadius: BorderRadius.all(Radius.circular(8.r)),
-        ),
-        child: CommonInkWell(
-          onTap: onTap,
+      child: CommonInkWell(
+        onTap: onTap,
+        child: SizedBox(
+          height: 40.sp,
           child: Center(
             child: Text(
               statusToString(tabBarEnum),
-              style: PoppinsStyles.regular.copyWith(
-                fontSize: 12.sp,
-                color: isSelected ? AppColors.whiteColor : AppColors.blackColor,
-              ),
+              style: isSelected
+                  ? PoppinsStyles.medium.copyWith(
+                      fontSize: 13.sp,
+                      color: AppColors.whiteColor,
+                    )
+                  : PoppinsStyles.regular.copyWith(
+                      fontSize: 13.sp,
+                      color: AppColors.blackColor,
+                    ),
             ),
           ),
         ),
@@ -84,7 +103,6 @@ class StatusButton extends StatelessWidget {
         return 'Mobile Recharge';
       case TabBarEnum.history:
         return 'History';
-
       default:
         return "";
     }

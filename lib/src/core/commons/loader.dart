@@ -48,35 +48,37 @@ class _CustomLoaderState extends State<CustomLoader>
 
   @override
   Widget build(BuildContext context) {
-    return ModalProgressHUD(
-      inAsyncCall: widget.isLoading,
-      opacity: 0.55,
-      progressIndicator: ScaleTransition(
-        scale: _animation,
-        child: widget.loader ??
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 24.sp,
-                  width: 24.sp,
+    return Material(
+      child: ModalProgressHUD(
+        inAsyncCall: widget.isLoading,
+        opacity: 0.55,
+        progressIndicator: ScaleTransition(
+          scale: _animation,
+          child: widget.loader ??
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 24.sp,
+                    width: 24.sp,
 
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.primaryColor)),
-                ),
-                8.horizontalSpace,
-                Text(
-                  'Loading',
-                  style: PoppinsStyles.regular
-                      .copyWith(color: AppColors.primaryColor, fontSize: 18.sp),
-                ),
-              ],
-            ),
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor)),
+                  ),
+                  8.horizontalSpace,
+                  Text(
+                    'Loading',
+                    style: PoppinsStyles.regular
+                        .copyWith(color: AppColors.primaryColor, fontSize: 18.sp),
+                  ),
+                ],
+              ),
+        ),
+        child: widget.child,
       ),
-      child: widget.child,
     );
   }
 }

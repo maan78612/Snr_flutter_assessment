@@ -1,9 +1,9 @@
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
-import 'package:technical_assessment_flutter/src/features/beneficiary/domain/repositories/beneficiary_repository.dart';
+import 'package:technical_assessment_flutter/src/features/top_up/domain/repositories/top_up_repository.dart';
 
-class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
+class TopUpRepositoryImpl implements TopUpRepository {
   @override
-  Future<List<BeneficiaryModel>> getBeneficiaries() async {
+  Future<List<BeneficiaryModel>> getTopUpHistory() async {
     try {
       // await NetworkApi.instance.get(url: ApiUrls.getScore);
 
@@ -42,7 +42,7 @@ class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
   }
 
   @override
-  Future<void> addBeneficiary({required Map<String, dynamic> body}) async {
+  Future<void> topUp({required Map<String, dynamic> body}) async {
     print(body);
   }
 }

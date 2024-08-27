@@ -32,14 +32,12 @@ class HomeScreen extends ConsumerWidget {
         children: [
           HomeTabBar(homeViewModelProvider: homeViewModelProvider),
           30.verticalSpace,
-          homeViewModel.selectedTab == TabBarEnum.recharge
-              ? BeneficiaryListView()
-              : const SizedBox.shrink(),
+          if (homeViewModel.selectedTab == TabBarEnum.recharge)
+            const BeneficiaryListView()
+          else
+            const SizedBox.shrink(),
         ],
       ),
-      floatingActionButton: homeViewModel.selectedTab == TabBarEnum.recharge
-          ? const AddBeneficiaryButton()
-          : null,
     );
   }
 }
