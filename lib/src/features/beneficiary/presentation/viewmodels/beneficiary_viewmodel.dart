@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_text_controller.dart';
 import 'package:technical_assessment_flutter/src/core/commons/success_dialog.dart';
+import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
 import 'package:technical_assessment_flutter/src/core/enums/snackbar_status.dart';
+import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/core/utilities/dialog_box.dart';
 import 'package:technical_assessment_flutter/src/core/utilities/snack_bar.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/data/repositories/beneficiary_repository_impl.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/repositories/beneficiary_repository.dart';
+import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
 
 class BeneficiaryViewModel extends ChangeNotifier {
   final BeneficiaryRepository _beneficiaryRepository =
@@ -35,15 +38,13 @@ class BeneficiaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initMethod() async {
-    await getBeneficiaries();
-  }
 
-  Future<void> getBeneficiaries() async {
+
+  Future<void> getBeneficiaries(String userId) async {
     try {
       setLoading(true);
       await Future.delayed(const Duration(milliseconds: 1000));
-      beneficiaryList = await _beneficiaryRepository.getBeneficiaries();
+      beneficiaryList = await _beneficiaryRepository.getBeneficiaries(userId);
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error);
     } finally {
@@ -81,27 +82,30 @@ class BeneficiaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addBeneficiary(BeneficiaryModel beneficiary) async {
-    beneficiary.toJson();
+  Future<void> addBeneficiary(UserModel user) async {
     try {
       if (beneficiaryList.length >= 5) {
         throw "You have reached maximum limit of 5  for adding beneficiary";
       }
       setLoading(true);
 
+      /// if user verified beneficiary limit is 500 , else 1000
+      double initialMonthlyLimit =
+          user.status == UserStatus.verified ? 500 : 1000;
+
+      final body = {
+        "name": nickNameCon.controller.text,
+        "number": numberCon.controller.text,
+        "monthlyLimit": initialMonthlyLimit,
+        "user_id": user.id,
+      };
+      final BeneficiaryModel beneficiary =
+          await _beneficiaryRepository.addBeneficiary(body: body);
       beneficiaryList.add(beneficiary);
-      //
-      // final body = {
-      //   "name": beneficiary.name,
-      //   "phoneNumber": beneficiary.number,
-      //   "limit": beneficiary.monthlyLimit,
-      //   "user_id": beneficiary.userId,
-      // };
-      // await _beneficiaryRepository.addBeneficiary(body: body);
 
       await DialogBoxUtils.show(
         SuccessDialog(
-          text: 'You added ${beneficiary.name} as a beneficiary',
+          text: 'You added ${nickNameCon.controller.text} as a beneficiary',
           heading: 'Congratulations!',
           img: AppImages.successIcon,
         ),
@@ -116,11 +120,10 @@ class BeneficiaryViewModel extends ChangeNotifier {
   }
 
   Future<void> deleteBeneficiary(BeneficiaryModel beneficiary) async {
-    beneficiary.toJson();
     try {
       setLoading(true);
-      // await _beneficiaryRepository.deleteBeneficiary();
-      beneficiaryList.remove(beneficiary);
+      await _beneficiaryRepository.deleteBeneficiary(beneficiary.id);
+      beneficiaryList.removeWhere((ben) => ben.id == beneficiary.id);
 
       await DialogBoxUtils.show(
         SuccessDialog(

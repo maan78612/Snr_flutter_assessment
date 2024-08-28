@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/commons/success_dialog.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
@@ -43,15 +44,13 @@ class TopUpViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initMethod() async {
-    await getTransactionHistory();
-  }
 
-  Future<void> getTransactionHistory() async {
+
+  Future<void> getTransactionHistory(String userId) async {
     try {
       setLoading(true);
       await Future.delayed(const Duration(milliseconds: 1000));
-      transactionHistory = await _topUpRepository.getTransactionHistory();
+      transactionHistory = await _topUpRepository.getTransactionHistory(userId);
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error);
     } finally {
@@ -76,36 +75,27 @@ class TopUpViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> validatePayment(BeneficiaryModel beneficiary) async {
+  Future<void> validatePayment(BeneficiaryModel beneficiary, WidgetRef ref) async {
     try {
-      Transaction transaction = Transaction(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 1,
-        beneficiaryId: beneficiary.id,
-        amount: selectedAmount!,
-        createdAt: DateTime.now(),
-        purpose: selectedPurpose!,
-        note: notesController.text,
-      );
-
       // Show Invoice dialog and proceed based on user's response
       bool? willProceed = await DialogBoxUtils.show(Invoice(
-        transaction: transaction,
+        amount: selectedAmount!,
         serviceCharge: serviceCharge,
       ));
 
       if (willProceed ?? false) {
-        transaction.amount = transaction.amount + serviceCharge;
+        final totalAmount = selectedAmount! + serviceCharge;
+        final user = ref.read(userModelProvider);
 
-        if (user!.availableBalance < transaction.amount) {
+        if (user.availableBalance < totalAmount) {
           throw "Your balance is not enough to top up.";
-        } else if (user!.remainingMonthlyLimit < transaction.amount) {
-          throw "Your remaining monthly limit is less than AED ${transaction.amount.toStringAsFixed(2)}.";
-        } else if (beneficiary.remaining < transaction.amount) {
-          throw "Beneficiary's remaining limit for top-up is less than AED ${transaction.amount.toStringAsFixed(2)}.";
+        } else if (user.remainingMonthlyLimit < totalAmount) {
+          throw "Your remaining monthly limit is less than AED ${totalAmount.toStringAsFixed(2)}.";
+        } else if (beneficiary.remaining < totalAmount) {
+          throw "Beneficiary's remaining limit for top-up is less than AED ${totalAmount.toStringAsFixed(2)}.";
         }
 
-        await proceedPayment(transaction, beneficiary);
+        await proceedPayment(totalAmount, beneficiary,ref);
       }
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error, seconds: 4);
@@ -113,22 +103,39 @@ class TopUpViewModel extends ChangeNotifier {
   }
 
   Future<void> proceedPayment(
-      Transaction transaction, BeneficiaryModel beneficiary) async {
+      double totalAmount, BeneficiaryModel beneficiary, WidgetRef ref) async {
     try {
+      final user=ref.read(userModelProvider);
       setLoading(true);
+      final body = {
+        "user_id": user.id,
+        "beneficiary_id": beneficiary.id,
+        "amount": totalAmount,
+        "purpose": selectedPurpose!,
+        "note": notesController.text
+      };
+      await _topUpRepository.topUp(body: body);
 
+      /// When transaction done successfully update local variables
+      /// I am not calling beneficiary and user api to fetch data updated data
+      /// I know which local variable should change that's there is no need for api call
+      /// if there is an error below code will not execute because of try catch
+      ///  So local variable will not change in that case
 
+      ref.read(userModelProvider.notifier).updateBalance(user.availableBalance-totalAmount);
+      ref.read(userModelProvider.notifier).updateMonthlyLimit(user.remainingMonthlyLimit-totalAmount);
 
-      await Future.delayed(const Duration(milliseconds: 2000));
-      print(transaction.toJson());
+      beneficiary.remaining = beneficiary.remaining - totalAmount;
+
       clearForm();
       CustomNavigation().pop();
       await Future.delayed(const Duration(milliseconds: 500));
 
+      /// show success dialog
       DialogBoxUtils.show(
         SuccessDialog(
           text:
-              "Your payment of AED ${transaction.amount.toStringAsFixed(2)} to ${beneficiary.name} has been successfully processed.",
+              "Your payment of AED ${totalAmount.toStringAsFixed(2)} to ${beneficiary.name} has been successfully processed.",
           heading: "Payment Successful",
           img: AppImages.successIcon,
         ),
@@ -147,19 +154,3 @@ class TopUpViewModel extends ChangeNotifier {
     _isBtnEnable = false;
   }
 }
-
-/*   final body = {
-        "name": nickNameCon.controller.text,
-        "phoneNumber": "+971${numberCon.controller.text}",
-        "limit": 500,
-        "user_id": "user-123",
-      };
-      await _topUpRepository.topUp(body: body);
-
-      await DialogBoxUtils.show(
-        SuccessDialog(
-          text: 'You added ${nickNameCon.controller.text} as a beneficiary',
-          heading: 'Congratulations!',
-          img: AppImages.successIcon,
-        ),
-      );*/

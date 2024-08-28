@@ -8,7 +8,7 @@ import 'package:technical_assessment_flutter/src/features/beneficiary/presentati
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/views/beneficiary_list/widgets/delete_button.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/viewmodels/top_up_viewmodel.dart';
 
-class BeneficiaryListView extends ConsumerStatefulWidget {
+class BeneficiaryListView extends ConsumerWidget {
   final ChangeNotifierProvider<TopUpViewModel> topUpViewModelProvider;
   final ChangeNotifierProvider<BeneficiaryViewModel>
       beneficiaryViewModelProvider;
@@ -19,23 +19,8 @@ class BeneficiaryListView extends ConsumerStatefulWidget {
       required this.beneficiaryViewModelProvider});
 
   @override
-  ConsumerState<BeneficiaryListView> createState() =>
-      _BeneficiaryListViewState();
-}
-
-class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(widget.beneficiaryViewModelProvider).initMethod();
-    });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final beneficiaryViewModel = ref.watch(widget.beneficiaryViewModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final beneficiaryViewModel = ref.watch(beneficiaryViewModelProvider);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.sp),
         child: beneficiaryViewModel.isLoading
@@ -47,9 +32,7 @@ class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
 
                     scrollDirection: Axis.horizontal,
                     child: Row(
-
                       children: List.generate(
-
                           beneficiaryViewModel.beneficiaryList.length, (index) {
                         final beneficiary =
                             beneficiaryViewModel.beneficiaryList[index];
@@ -59,12 +42,13 @@ class _BeneficiaryListViewState extends ConsumerState<BeneficiaryListView> {
                           children: [
                             BeneficiaryCard(
                               beneficiary: beneficiary,
-                              topUpViewModelProvider:
-                                  widget.topUpViewModelProvider,
+                              topUpViewModelProvider: topUpViewModelProvider,
                             ),
                             DeleteButton(
-                                beneficiaryViewModelProvider:
-                                    widget.beneficiaryViewModelProvider, beneficiary: beneficiary,),
+                              beneficiaryViewModelProvider:
+                                  beneficiaryViewModelProvider,
+                              beneficiary: beneficiary,
+                            ),
                           ],
                         );
                       }),

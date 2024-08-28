@@ -13,6 +13,7 @@ import 'package:technical_assessment_flutter/src/core/constants/text_field_valid
 import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
+import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
 
 class AddBeneficiary extends ConsumerWidget {
   final ChangeNotifierProvider<BeneficiaryViewModel>
@@ -23,6 +24,7 @@ class AddBeneficiary extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final beneficiaryViewModel = ref.watch(beneficiaryViewModelProvider);
+    final user = ref.watch(userModelProvider);
 
     return CustomLoader(
       isLoading: beneficiaryViewModel.isLoading,
@@ -73,7 +75,7 @@ class AddBeneficiary extends ConsumerWidget {
                           validator: TextFieldValidator.validatePhoneNumberUAE);
                     },
                   ),
-                  notes(),
+                  notes(user),
                 ],
               ),
             ),
@@ -86,18 +88,7 @@ class AddBeneficiary extends ConsumerWidget {
             isEnable: beneficiaryViewModel.isBtnEnable,
             bgColor: AppColors.primaryColor,
             onPressed: () {
-              double initialMonthlyLimit =
-                  user?.status == UserStatus.verified ? 500 : 1000;
-              final newBeneficiary = BeneficiaryModel(
-                  id: DateTime.now().microsecondsSinceEpoch,
-                  name: beneficiaryViewModel.nickNameCon.controller.text,
-                  number:
-                      "+971${beneficiaryViewModel.numberCon.controller.text}",
-                  userId: user!.id,
-                  monthlyLimit: initialMonthlyLimit,
-                  remaining: initialMonthlyLimit,
-                  createdAt: DateTime.now());
-              beneficiaryViewModel.addBeneficiary(newBeneficiary);
+              beneficiaryViewModel.addBeneficiary(user);
             },
           ),
         ),
@@ -105,7 +96,7 @@ class AddBeneficiary extends ConsumerWidget {
     );
   }
 
-  Widget notes() {
+  Widget notes(UserModel user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -113,7 +104,7 @@ class AddBeneficiary extends ConsumerWidget {
         Text("Note :", style: PoppinsStyles.medium.copyWith(fontSize: 18.sp)),
         10.verticalSpace,
         infoPointsWidget(
-            "You can send a maximum of ${user?.status == UserStatus.verified ? '500' : '1000'} AED per month per beneficiary."),
+            "You can send a maximum of ${user.status == UserStatus.verified ? '500' : '1000'} AED per month per beneficiary."),
         20.verticalSpace,
       ],
     );

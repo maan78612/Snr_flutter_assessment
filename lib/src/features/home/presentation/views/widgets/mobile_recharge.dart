@@ -7,6 +7,7 @@ import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/views/beneficiary_list/beneficiary_list_view.dart';
+import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/viewmodels/top_up_viewmodel.dart';
 
 class MobileRechargeView extends ConsumerStatefulWidget {
@@ -20,15 +21,16 @@ class MobileRechargeView extends ConsumerStatefulWidget {
       required this.beneficiaryViewModelProvider});
 
   @override
-  ConsumerState<MobileRechargeView> createState() =>
-      _BeneficiaryListViewState();
+  ConsumerState<MobileRechargeView> createState() => _MobileRechargeViewState();
 }
 
-class _BeneficiaryListViewState extends ConsumerState<MobileRechargeView> {
+class _MobileRechargeViewState extends ConsumerState<MobileRechargeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(widget.beneficiaryViewModelProvider).initMethod();
+      ref
+          .read(widget.beneficiaryViewModelProvider)
+          .getBeneficiaries(ref.read(userModelProvider).id);
     });
 
     super.initState();
@@ -36,17 +38,18 @@ class _BeneficiaryListViewState extends ConsumerState<MobileRechargeView> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userModelProvider);
     return Column(
       children: [
         BeneficiaryListView(
             topUpViewModelProvider: widget.topUpViewModelProvider,
             beneficiaryViewModelProvider: widget.beneficiaryViewModelProvider),
-        Expanded(child: infoWidget()),
+        Expanded(child: infoWidget(user)),
       ],
     );
   }
 
-  Widget infoWidget() {
+  Widget infoWidget(UserModel user) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: hMargin),
       child: SingleChildScrollView(
@@ -54,7 +57,7 @@ class _BeneficiaryListViewState extends ConsumerState<MobileRechargeView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             20.verticalSpace,
-            remainingMonthlyLimit(),
+            remainingMonthlyLimit(user),
             20.verticalSpace,
             Text("Note :",
                 style: PoppinsStyles.medium.copyWith(fontSize: 18.sp)),
@@ -75,7 +78,7 @@ class _BeneficiaryListViewState extends ConsumerState<MobileRechargeView> {
     );
   }
 
-  Widget remainingMonthlyLimit() {
+  Widget remainingMonthlyLimit(UserModel user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
-import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/features/home/presentation/views/widgets/staus_badge.dart';
 
-class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class WelcomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const WelcomeAppBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final user=ref.watch(userModelProvider);
     return ClipPath(
       clipper: WaveClipperOne(
         flip: true,
@@ -41,7 +42,7 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     7.verticalSpace,
                     Text(
-                      "${user?.name}",
+                      "${ref.read(userModelProvider)?.name}",
                       style: PoppinsStyles.bold.copyWith(
                           fontSize: 24.sp, color: AppColors.whiteColor),
                     ),

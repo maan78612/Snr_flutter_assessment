@@ -5,14 +5,12 @@ import 'package:technical_assessment_flutter/src/core/commons/custom_inkwell.dar
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
-import 'package:technical_assessment_flutter/src/features/top_up/domain/model/top_up.dart';
 
 class Invoice extends StatelessWidget {
-  final Transaction transaction;
+  final double amount;
   final double serviceCharge;
 
-  const Invoice(
-      {required this.transaction, required this.serviceCharge, super.key});
+  const Invoice({required this.amount, required this.serviceCharge, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +36,12 @@ class Invoice extends StatelessWidget {
           ),
           20.verticalSpace,
           _buildInvoiceRow('Product', "Mobile Recharge"),
-          _buildInvoiceRow(
-              'Price', '${transaction.amount.toStringAsFixed(2)} AED'),
+          _buildInvoiceRow('Price', '${amount.toStringAsFixed(2)} AED'),
           20.verticalSpace,
           _buildInvoiceRow(
             'Sub total',
             isSemiBold: true,
-            '${transaction.amount.toStringAsFixed(2)} AED',
+            '${amount.toStringAsFixed(2)} AED',
             isBold: true,
           ),
 
@@ -59,7 +56,7 @@ class Invoice extends StatelessWidget {
           const Divider(),
           _buildInvoiceRow(
             'Total',
-            '${(transaction.amount + serviceCharge).toStringAsFixed(2)} AED',
+            '${(amount + serviceCharge).toStringAsFixed(2)} AED',
             isBold: true,
           ),
           20.verticalSpace, // Space between total and button

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_text_controller.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
@@ -61,18 +62,17 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login() async {
+  Future<void> login(WidgetRef ref) async {
     try {
       setLoading(true);
 
-     /* final body = {
+      final body = {
         "email": emailCon.controller.text,
         "password": passwordCon.controller.text,
       };
-       user = await _authRepository.login(body: body);*/
+      final loginUser = await _authRepository.login(body: body);
 
-      /// temporary
-      user = notVerifiedUser;
+      ref.read(userModelProvider.notifier).setUser(loginUser);
 
       CustomNavigation().pushAndRemoveUntil(HomeView(), animate: false);
     } catch (e) {

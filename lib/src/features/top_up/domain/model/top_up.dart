@@ -1,44 +1,41 @@
+import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
+
 class Transaction {
   String id;
-  int userId;
-  int beneficiaryId;
-  double amount;
-  DateTime createdAt;
+  String userId;
+  BeneficiaryModel beneficiary;
+  int amount;
   String purpose;
-  String? note;
+  String note;
+  DateTime createdAt;
 
   Transaction({
     required this.id,
     required this.userId,
-    required this.beneficiaryId,
+    required this.beneficiary,
     required this.amount,
-    required this.createdAt,
     required this.purpose,
-    this.note,
+    required this.note,
+    required this.createdAt,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      id: json['id'],
-      userId: json['user_id'],
-      beneficiaryId: json['beneficiary_id'],
-      amount: json['amount'],
-      createdAt: DateTime.parse(json['created_at']),
-      purpose: json['purpose'],
-      note: json['note'],
-    );
-  }
+  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+        id: json["_id"],
+        userId: json["user_id"],
+        beneficiary: BeneficiaryModel.fromJson(json["beneficiary_id"]),
+        amount: json["amount"],
+        purpose: json["purpose"],
+        note: json["note"],
+        createdAt: DateTime.parse(json["createdAt"]),
+      );
 
-  // toJson: converts a Transaction to a JSON map
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'user_id': userId,
-      'beneficiary_id': beneficiaryId,
-      'amount': amount,
-      'created_at': createdAt.toIso8601String(),
-      'purpose': purpose,
-      'note': note,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "user_id": userId,
+        "beneficiary_id": beneficiary.toJson(),
+        "amount": amount,
+        "purpose": purpose,
+        "note": note,
+        "createdAt": createdAt.toIso8601String(),
+      };
 }

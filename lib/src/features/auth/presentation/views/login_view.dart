@@ -67,7 +67,7 @@ class LoginView extends ConsumerWidget {
                       isEnable: loginViewModel.isBtnEnable,
                       bgColor: AppColors.primaryColor,
                       onPressed: () {
-                        loginViewModel.login();
+                        loginViewModel.login(ref);
                       },
                     ),
                   ],

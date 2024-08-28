@@ -27,7 +27,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(widget.topUpViewModelProvider).initMethod();
+      ref
+          .read(widget.topUpViewModelProvider)
+          .getTransactionHistory(ref.read(userModelProvider).id);
     });
 
     super.initState();
@@ -41,17 +43,23 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         padding: EdgeInsets.symmetric(horizontal: hMargin),
         child: topUpViewModel.isLoading // Show shimmer if loading
             ? const HistoryShimmer()
-            : Column(
-                children: List.generate(
-                    topUpViewModel.transactionHistory.length, (index) {
-                  final transaction = topUpViewModel.transactionHistory[index];
-                  final beneficiary = widget.beneficiaryList.firstWhere(
-                      (beneficiary) =>
-                          beneficiary.id == transaction.beneficiaryId);
+            : topUpViewModel.transactionHistory.isNotEmpty
+                ? Column(
+                    children: List.generate(
+                        topUpViewModel.transactionHistory.length, (index) {
+                      final transaction =
+                          topUpViewModel.transactionHistory[index];
 
-                  return _buildHistoryItem(beneficiary, transaction);
-                }),
-              ),
+                      return _buildHistoryItem(
+                          transaction.beneficiary, transaction);
+                    }),
+                  )
+                : Center(
+                    child: Text(
+                      "No transaction history found",
+                      style: PoppinsStyles.semiBold,
+                    ),
+                  ),
       ),
     );
   }

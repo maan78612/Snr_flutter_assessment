@@ -38,7 +38,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    ref.read(homeViewModelProvider).resetMonth();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeViewModelProvider).resetMonth(ref);
+    });
+
     super.initState();
   }
 

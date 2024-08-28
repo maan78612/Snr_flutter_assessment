@@ -11,9 +11,9 @@ class NetworkApi {
   static NetworkApi? _instance;
   static final Dio _dio = Dio();
 
-  /// TODO: Temporary - Replace with actual authentication mechanism
+  /// Replace with actual authentication mechanism currently send null for mock apis
   static Map<String, dynamic> get header {
-    return {"Authorization": user != null ? "Bearer ${user!.id}" : null};
+    return {"Authorization": null};
   }
 
   NetworkApi._();
@@ -206,7 +206,7 @@ class NetworkApi {
       case DioExceptionType.badCertificate:
         return "Invalid certificate";
       case DioExceptionType.badResponse:
-        return "Bad response from server. Try again later!";
+        return "${exception.response?.data?['error'] ?? 'Bad response from server. Try again later!'}";
       case DioExceptionType.connectionError:
         return "Connection error";
       case DioExceptionType.unknown:
@@ -220,17 +220,17 @@ class NetworkApi {
       log("Response: $response");
     }
 
-    if (response['status'] != null && response['status'] is num) {
-      switch (response['status']) {
-        case 200:
-        case 201:
-          return response;
-        default:
-          throw response['message'];
-      }
-    } else {
-      return response; // For APIs that don't follow a standard response structure
-    }
+    // if (response['status'] != null && response['status'] is num) {
+    //   switch (response['status']) {
+    //     case 200:
+    //     case 201:
+    //       return response;
+    //     default:
+    //       throw response['message'];
+    //   }
+    // } else {
+    return response;
+    // }
   }
 
   void _printRequestDetails({

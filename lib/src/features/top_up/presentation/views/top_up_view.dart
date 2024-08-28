@@ -29,6 +29,7 @@ class TopUpView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final topUpViewModel = ref.watch(topUpViewModelProvider);
+
     return CustomLoader(
       isLoading: topUpViewModel.isLoading,
       child: Scaffold(
@@ -64,7 +65,7 @@ class TopUpView extends ConsumerWidget {
             isEnable: topUpViewModel.isBtnEnable,
             bgColor: AppColors.primaryColor,
             onPressed: () async {
-              await topUpViewModel.validatePayment(beneficiary);
+              await topUpViewModel.validatePayment(beneficiary, ref);
             },
             title: "Proceed",
           ),

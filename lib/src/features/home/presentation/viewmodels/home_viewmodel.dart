@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/enums/snackbar_status.dart';
@@ -31,14 +32,12 @@ class HomeViewModel with ChangeNotifier {
 
   /// Resets the month if the saved month is not the current month.
   /// This includes resetting the user's remaining balance and their beneficiaries' balances.
-  Future<void> resetMonth() async {
-    if (!_isCurrentMonth()) {
+  Future<void> resetMonth(WidgetRef ref) async {
+    final String? changeMonth = _isCurrentMonth(ref);
+    if (changeMonth != null) {
       try {
         setLoading(true);
-        final body = {
-          "email": "",
-          "password": "",
-        };
+        final body = {"currentMonth": changeMonth};
         await _homeRepository.resetBalances(body: body);
         SnackBarUtils.show(
           "Balances updated successfully",
@@ -56,9 +55,15 @@ class HomeViewModel with ChangeNotifier {
   }
 
   /// Checks if the saved month in the user attributes is the current month.
-  bool _isCurrentMonth() {
+  String? _isCurrentMonth(WidgetRef ref) {
     DateTime now = DateTime.now();
     String actualCurrentMonth = DateFormat('MM-yyyy').format(now);
-    return user?.currentMonth == actualCurrentMonth;
+
+    print("actualCurrentMonth = $actualCurrentMonth");
+    print("user.currentMonth = ${ref.read(userModelProvider).currentMonth}");
+    if (ref.read(userModelProvider).currentMonth != actualCurrentMonth) {
+      return actualCurrentMonth;
+    }
+    return null;
   }
 }

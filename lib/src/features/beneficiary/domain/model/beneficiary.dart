@@ -1,11 +1,12 @@
 class BeneficiaryModel {
-  final int id;
-  final String name;
-  final String number;
-  final int userId;
-  final double monthlyLimit;
-  final double remaining;
-  final DateTime createdAt;
+  String id;
+  String name;
+  String number;
+  String userId;
+  double monthlyLimit;
+  double remaining;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   BeneficiaryModel({
     required this.id,
@@ -15,31 +16,29 @@ class BeneficiaryModel {
     required this.monthlyLimit,
     required this.remaining,
     required this.createdAt,
+    required this.updatedAt,
   });
 
-  // Factory constructor to create an instance from JSON
-  factory BeneficiaryModel.fromJson(Map<String, dynamic> json) {
-    return BeneficiaryModel(
-      id: json['id'],
-      name: json['name'],
-      number: json['number'],
-      userId: json['user_id'],
-      monthlyLimit: json['monthly_limit'],
-      remaining: json['remaining'],
-      createdAt: DateTime.parse(json['created_at']),
-    );
-  }
+  factory BeneficiaryModel.fromJson(Map<String, dynamic> json) =>
+      BeneficiaryModel(
+        id: json["_id"],
+        name: json["name"],
+        number: json["number"],
+        userId: json["user_id"],
+        monthlyLimit: double.parse(json["monthlyLimit"].toString()),
+        remaining: double.parse(json["remaining"].toString()),
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+      );
 
-  // Method to convert an instance to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'number': number,
-      'user_id': userId,
-      'monthly_limit': monthlyLimit,
-      'remaining': remaining,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "name": name,
+        "number": number,
+        "user_id": userId,
+        "monthlyLimit": monthlyLimit,
+        "remaining": remaining,
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
+      };
 }
