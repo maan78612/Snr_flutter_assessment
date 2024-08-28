@@ -3,6 +3,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
+import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
 import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/features/home/presentation/views/widgets/staus_badge.dart';
@@ -40,7 +41,7 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     7.verticalSpace,
                     Text(
-                      "Abdul Rehman",
+                      "${user?.name}",
                       style: PoppinsStyles.bold.copyWith(
                           fontSize: 24.sp, color: AppColors.whiteColor),
                     ),
@@ -71,7 +72,8 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                             color: AppColors.whiteColor),
                       ),
                       TextSpan(
-                        text: "3400 Aed",
+                        text:
+                            "${"${user?.availableBalance.toStringAsFixed(1)}"} AED",
                         style: PoppinsStyles.bold.copyWith(
                             fontSize: 18.sp, color: AppColors.whiteColor),
                       ),
@@ -79,7 +81,7 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 const Spacer(),
-                const StatusBadge(status: UserStatus.notVerified),
+                StatusBadge(status: user!.status),
               ],
             ),
             10.verticalSpace,
@@ -91,5 +93,5 @@ class WelcomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(170.h); // Adjust the height as needed
+      Size.fromHeight(180.h); // Adjust the height as needed
 }

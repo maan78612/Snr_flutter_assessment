@@ -1,16 +1,19 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/services/network/app_exceptions.dart';
 
 class NetworkApi {
   static NetworkApi? _instance;
   static final Dio _dio = Dio();
 
+  /// TODO: Temporary - Replace with actual authentication mechanism
   static Map<String, dynamic> get header {
-    return {"Authorization": ""};
+    return {"Authorization": user != null ? "Bearer ${user!.id}" : null};
   }
 
   NetworkApi._();
@@ -20,195 +23,176 @@ class NetworkApi {
     return _instance!;
   }
 
-  Future get(
-      {required String url,
-      Map<String, dynamic>? params,
-      Map<String, dynamic>? customHeader}) async {
-    printFunc(methodType: "GET", url: url, apiHeader: customHeader ?? header);
-    try {
-      final response = await _dio.get(
+  Future<bool> checkConnectivity() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult == ConnectivityResult.none;
+  }
+
+  Future<dynamic> get({
+    required String url,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? customHeader,
+  }) async {
+    _printRequestDetails(
+      methodType: "GET",
+      url: url,
+      apiHeader: customHeader ?? header,
+      params: params,
+    );
+
+    return _handleRequest(() async {
+      return await _dio.get(
         url,
         queryParameters: params,
-        options: Options(
-          headers: customHeader ?? header,
-          sendTimeout: const Duration(milliseconds: 22000), //_defaultTimeout,
-          receiveTimeout:
-              const Duration(milliseconds: 22000), //_defaultTimeout,
-        ),
+        options: _buildDioOptions(customHeader),
       );
-
-      return returnResponse(response);
-    } on DioException catch (e) {
-      throw DioExceptionError(_getDioExceptionErrorMessage(e));
-    }
+    });
   }
 
-  Future post({
+  Future<dynamic> post({
+    required String url,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? customHeader,
+    List<MapEntry<String, File>>? files,
+  }) async {
+    _printRequestDetails(
+      methodType: "POST",
+      url: url,
+      apiHeader: customHeader ?? header,
+      body: body,
+    );
+
+    return _handleRequest(() async {
+      var data = files != null && files.isNotEmpty
+          ? await _prepareFormData(body, files)
+          : body;
+      return await _dio.post(
+        url,
+        data: data,
+        options: _buildDioOptions(customHeader),
+      );
+    });
+  }
+
+  Future<dynamic> patch({
     required String url,
     required Map<String, dynamic> body,
     Map<String, dynamic>? customHeader,
     List<MapEntry<String, File>>? files,
   }) async {
-    printFunc(
-        methodType: "POST",
-        url: url,
-        apiHeader: customHeader ?? header,
-        body: body);
-    Response<dynamic> response;
+    _printRequestDetails(
+      methodType: "PATCH",
+      url: url,
+      apiHeader: customHeader ?? header,
+      body: body,
+    );
 
-    try {
-      dynamic data;
-      if (files != null && files.isNotEmpty) {
-        FormData formData = FormData();
-        body.forEach((key, value) {
-          formData.fields.add(MapEntry(key, value.toString()));
-        });
-
-        for (var fileEntry in files) {
-          String fileName = fileEntry.value.path.split('/').last;
-          log("fileEntry key : ${fileEntry.key}       fileEntry value:${fileEntry.value.path}");
-          formData.files.add(
-            MapEntry(
-              fileEntry.key,
-              await MultipartFile.fromFile(fileEntry.value.path,
-                  filename: fileName),
-            ),
-          );
-        }
-        data = formData;
-      } else {
-        data = body;
-      }
-
-      response = await _dio.post(
+    return _handleRequest(() async {
+      var data = files != null && files.isNotEmpty
+          ? await _prepareFormData(body, files)
+          : body;
+      return await _dio.patch(
         url,
         data: data,
-        options: Options(
-          sendTimeout: const Duration(milliseconds: 22000),
-          receiveTimeout: const Duration(milliseconds: 22000),
-          headers: customHeader ?? header,
-        ),
+        options: _buildDioOptions(customHeader),
       );
+    });
+  }
 
-      return returnResponse(response);
+  Future<dynamic> put({
+    required String url,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? customHeader,
+    List<MapEntry<String, File>>? files,
+  }) async {
+    _printRequestDetails(
+      methodType: "PUT",
+      url: url,
+      apiHeader: customHeader ?? header,
+      body: body,
+    );
+
+    return _handleRequest(() async {
+      var data = files != null && files.isNotEmpty
+          ? await _prepareFormData(body, files)
+          : body;
+      return await _dio.put(
+        url,
+        data: data,
+        options: _buildDioOptions(customHeader),
+      );
+    });
+  }
+
+  Future<dynamic> delete({
+    required String url,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? customHeader,
+  }) async {
+    _printRequestDetails(
+      methodType: "DELETE",
+      url: url,
+      apiHeader: customHeader ?? header,
+      params: params,
+    );
+
+    return _handleRequest(() async {
+      return await _dio.delete(
+        url,
+        options: _buildDioOptions(customHeader),
+      );
+    });
+  }
+
+  Future<dynamic> _handleRequest(
+      Future<Response<dynamic>> Function() request) async {
+    try {
+      if (await checkConnectivity()) {
+        throw "No Internet Connection";
+      }
+      final response = await request();
+      return _returnResponse(response.data);
     } on DioException catch (e) {
       throw DioExceptionError(_getDioExceptionErrorMessage(e));
     }
   }
 
-  Future patch({
-    required String url,
-    required Map<String, dynamic> body,
-    Map<String, dynamic>? customHeader,
-    List<MapEntry<String, File>>? files,
-  }) async {
-    printFunc(
-        methodType: "PATCH",
-        url: url,
-        apiHeader: customHeader ?? header,
-        body: body);
-    Response<dynamic> response;
-
-    try {
-      dynamic data;
-      if (files != null && files.isNotEmpty) {
-        FormData formData = FormData();
-        body.forEach((key, value) {
-          formData.fields.add(MapEntry(key, value.toString()));
-        });
-
-        for (var fileEntry in files) {
-          String fileName = fileEntry.value.path.split('/').last;
-          log("fileEntry key : ${fileEntry.key}       fileEntry value:${fileEntry.value.path}");
-          formData.files.add(
-            MapEntry(
-              fileEntry.key,
-              await MultipartFile.fromFile(fileEntry.value.path,
-                  filename: fileName),
-            ),
-          );
-        }
-        data = formData;
-      } else {
-        data = body;
-      }
-
-      response = await _dio.patch(
-        url,
-        data: data,
-        options: Options(
-          sendTimeout: const Duration(milliseconds: 22000),
-          receiveTimeout: const Duration(milliseconds: 22000),
-          headers: customHeader ?? header,
-        ),
-      );
-
-      return returnResponse(response);
-    } on DioException catch (e) {
-      throw DioExceptionError(_getDioExceptionErrorMessage(e));
-    }
+  Options _buildDioOptions(Map<String, dynamic>? customHeader) {
+    return Options(
+      headers: customHeader ?? header,
+      sendTimeout: const Duration(milliseconds: 22000),
+      receiveTimeout: const Duration(milliseconds: 22000),
+    );
   }
 
-  Future put({
-    required String url,
-    required Map<String, dynamic> body,
-    Map<String, dynamic>? customHeader,
-    List<MapEntry<String, File>>? files,
-  }) async {
-    printFunc(
-        methodType: "PUT",
-        url: url,
-        apiHeader: customHeader ?? header,
-        body: body);
-    if (customHeader != null) {
-      log("customHeader = $customHeader");
-    }
-    Response<dynamic> response;
+  Future<FormData> _prepareFormData(
+    Map<String, dynamic>? body,
+    List<MapEntry<String, File>> files,
+  ) async {
+    FormData formData = FormData();
+    body?.forEach((key, value) {
+      formData.fields.add(MapEntry(key, value.toString()));
+    });
 
-    try {
-      dynamic data;
-      if (files != null && files.isNotEmpty) {
-        FormData formData = FormData();
-        body.forEach((key, value) {
-          formData.fields.add(MapEntry(key, value.toString()));
-        });
-
-        for (var fileEntry in files) {
-          String fileName = fileEntry.value.path.split('/').last;
-          log("fileEntry key : ${fileEntry.key}       fileEntry value:${fileEntry.value.path}");
-          formData.files.add(
-            MapEntry(
-              fileEntry.key,
-              await MultipartFile.fromFile(fileEntry.value.path,
-                  filename: fileName),
-            ),
-          );
-        }
-        data = formData;
-      } else {
-        data = body;
-      }
-
-      response = await _dio.put(
-        url,
-        data: data,
-        options: Options(
-          sendTimeout: const Duration(milliseconds: 22000),
-          receiveTimeout: const Duration(milliseconds: 22000),
-          headers: customHeader ?? header,
+    for (var fileEntry in files) {
+      String fileName = fileEntry.value.path.split('/').last;
+      log("Adding file: ${fileEntry.key} - ${fileEntry.value.path}");
+      formData.files.add(
+        MapEntry(
+          fileEntry.key,
+          await MultipartFile.fromFile(
+            fileEntry.value.path,
+            filename: fileName,
+          ),
         ),
       );
-
-      return returnResponse(response);
-    } on DioException catch (e) {
-      log(e.toString());
-      throw DioExceptionError(_getDioExceptionErrorMessage(e));
     }
+    return formData;
   }
 
   String _getDioExceptionErrorMessage(DioException exception) {
     if (kDebugMode) {
-      log("Exception type : ${exception.type}, Response: ${exception.response?.data}");
+      log("Exception type: ${exception.type}, Response: ${exception.response?.data}");
     }
     switch (exception.type) {
       case DioExceptionType.connectionTimeout:
@@ -222,53 +206,46 @@ class NetworkApi {
       case DioExceptionType.badCertificate:
         return "Invalid certificate";
       case DioExceptionType.badResponse:
-        return exception.response?.data['message'] ?? "Bad response";
+        return "Bad response from server. Try again later!";
       case DioExceptionType.connectionError:
         return "Connection error";
       case DioExceptionType.unknown:
-        return "Unknown error";
       default:
         return "Unknown error";
     }
   }
 
-  dynamic returnResponse(Response<dynamic> response) {
+  dynamic _returnResponse(dynamic response) {
     if (kDebugMode) {
-      log("Status Code: ${response.statusCode}, Response: ${response.data}");
+      log("Response: $response");
     }
-    switch (response.statusCode) {
-      case 200:
-      case 201:
-        dynamic jsonResponse = response.data;
-        return jsonResponse;
-      case 404:
-        throw BadRequestException(response.statusMessage);
-      case 401:
-        throw BadRequestException(response.statusMessage);
-      case 443:
-      case 500:
-        throw InternalServerError(jsonDecode(response.data)['message']);
-      case 400:
-        {
-          dynamic jsonResponse = jsonDecode(response.data);
-          throw InvalidInputException(jsonResponse['message']);
-        }
-      default:
-        throw FetchDataException(response.statusMessage);
+
+    if (response['status'] != null && response['status'] is num) {
+      switch (response['status']) {
+        case 200:
+        case 201:
+          return response;
+        default:
+          throw response['message'];
+      }
+    } else {
+      return response; // For APIs that don't follow a standard response structure
     }
   }
 
-  void printFunc(
-      {required String methodType,
-      required String url,
-      Map<String, dynamic>? body,
-      required Map<String, dynamic> apiHeader}) {
+  void _printRequestDetails({
+    required String methodType,
+    required String url,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? params,
+    required Map<String, dynamic> apiHeader,
+  }) {
     debugPrint(
         "------------------------- $methodType ---------------------------");
-    debugPrint(" url = $url");
-    if (body != null) debugPrint("body = $body");
-    debugPrint("header = $apiHeader");
-
+    debugPrint("URL: $url");
+    if (body != null) debugPrint("Body: $body");
+    if (params != null) debugPrint("Params: $params");
+    debugPrint("Headers: $apiHeader");
     debugPrint(
         "-------------------------------------------------------------------");
   }

@@ -59,7 +59,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget _buildHistoryItem(
       BeneficiaryModel beneficiary, Transaction transaction) {
     return Card(
-      color: AppColors.whiteColor,
+      color: AppColors.offWhite,
       margin: EdgeInsets.symmetric(vertical: 10.sp),
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -79,10 +79,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             ),
             10.verticalSpace,
             _buildRow('Number:', beneficiary.number),
+            _buildRow('Purpose:', transaction.purpose),
             _buildRow('Transaction Amount:',
                 '${transaction.amount.toStringAsFixed(2)} AED'),
             _buildRow('Date:', transaction.createdAt.toString().split(' ')[0]),
-            20.verticalSpace,
+            10.verticalSpace,
           ],
         ),
       ),

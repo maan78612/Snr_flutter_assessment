@@ -2,7 +2,7 @@ class BeneficiaryModel {
   final int id;
   final String name;
   final String number;
-  final String userId;
+  final int userId;
   final double monthlyLimit;
   final double remaining;
   final DateTime createdAt;

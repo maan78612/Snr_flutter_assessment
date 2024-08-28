@@ -1,3 +1,3 @@
-import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
-
-abstract class HomeRepository {}
+abstract class HomeRepository {
+  Future<void> resetBalances({required Map<String, dynamic> body});
+}

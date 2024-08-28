@@ -6,14 +6,14 @@ import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
 import 'package:technical_assessment_flutter/src/features/splash/presentation/viewmodels/splash_viewmodel.dart';
 
-class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({super.key});
+class SplashView extends ConsumerStatefulWidget {
+  const SplashView({super.key});
 
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen>
+class _SplashViewState extends ConsumerState<SplashView>
     with TickerProviderStateMixin {
   /// Provider for the SplashViewModel using ChangeNotifierProvider
   final _splashViewModelProvider =
@@ -46,7 +46,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               20.verticalSpace,
               Text("Technical Assessment", style: PoppinsStyles.regular),
               14.verticalSpace,
-              Text("Snr. Flutter Developer",
+              Text("Sr. Flutter Developer",
                   style: PoppinsStyles.extraBold.copyWith(fontSize: 24.sp)),
             ],
           ),

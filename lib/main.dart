@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
-import 'package:technical_assessment_flutter/src/features/splash/presentation/views/splash_screen.dart';
+import 'package:technical_assessment_flutter/src/features/splash/presentation/views/splash_view.dart';
 
 void main() async {
-  //Initialize Flutter Binding
   await _initMethod();
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             navigatorKey: CustomNavigation().navigatorKey,
             title: 'Technical Assessment',
-            home: const SplashScreen(),
+            home: const SplashView(),
           ),
         );
       },

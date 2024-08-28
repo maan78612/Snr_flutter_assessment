@@ -38,7 +38,7 @@ class AmountGridView extends ConsumerWidget {
                 decoration: BoxDecoration(
                     color: topUpViewModel.selectedAmount == amount
                         ? AppColors.primaryColor
-                        :Color(0xffFAF9F6),
+                        : AppColors.offWhite,
                     border: Border.all(color: AppColors.primaryColor),
                     borderRadius: BorderRadius.all(Radius.circular(4.r))),
                 child: Center(

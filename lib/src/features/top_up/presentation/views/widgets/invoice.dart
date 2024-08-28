@@ -9,15 +9,13 @@ import 'package:technical_assessment_flutter/src/features/top_up/domain/model/to
 
 class Invoice extends StatelessWidget {
   final Transaction transaction;
+  final double serviceCharge;
 
-  const Invoice({required this.transaction, super.key});
-
-  final double serviceCharge = 1.0;
+  const Invoice(
+      {required this.transaction, required this.serviceCharge, super.key});
 
   @override
   Widget build(BuildContext context) {
-    double totalPrice = transaction.amount + serviceCharge;
-
     return Container(
       width: 0.9.sw, // Adjust width to make it wider
       padding: EdgeInsets.all(20.sp), // Add padding for better spacing
@@ -61,7 +59,7 @@ class Invoice extends StatelessWidget {
           const Divider(),
           _buildInvoiceRow(
             'Total',
-            '${totalPrice.toStringAsFixed(2)} AED',
+            '${(transaction.amount + serviceCharge).toStringAsFixed(2)} AED',
             isBold: true,
           ),
           20.verticalSpace, // Space between total and button

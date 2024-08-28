@@ -30,11 +30,14 @@ class HomeTabBar extends ConsumerWidget {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            left:
-                (1.sw - 2 * hMargin) / TabBarEnum.values.length * selectedIndex,
+            left: (MediaQuery.of(context).size.width - (2 * hMargin)) /
+                TabBarEnum.values.length *
+                selectedIndex,
 
-            /// animating the color by adjusting width
-            width: (1.sw - 2 * hMargin) / TabBarEnum.values.length - 8.sp,
+            /// Adjust the width calculation to ensure it fits on larger screens
+            width: (MediaQuery.of(context).size.width - (2 * hMargin)) /
+                    TabBarEnum.values.length -
+                8.sp,
             height: 40.h,
             child: Container(
               decoration: BoxDecoration(

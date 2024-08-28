@@ -13,12 +13,12 @@ import 'package:technical_assessment_flutter/src/core/enums/snackbar_status.dart
 import 'package:technical_assessment_flutter/src/core/utilities/snack_bar.dart';
 import 'package:technical_assessment_flutter/src/features/auth/presentation/viewmodels/login_viewmodel.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginView extends ConsumerWidget {
   final loginViewModelProvider = ChangeNotifierProvider<LoginViewModel>((ref) {
     return LoginViewModel();
   });
 
-  LoginScreen({super.key});
+  LoginView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +41,7 @@ class LoginScreen extends ConsumerWidget {
                       title: "Email",
                       hint: "john@email.com",
                       keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       onChange: (value) {
                         loginViewModel.onChange(
                             con: loginViewModel.emailCon,
@@ -65,7 +66,6 @@ class LoginScreen extends ConsumerWidget {
                       title: 'Login',
                       isEnable: loginViewModel.isBtnEnable,
                       bgColor: AppColors.primaryColor,
-
                       onPressed: () {
                         loginViewModel.login();
                       },

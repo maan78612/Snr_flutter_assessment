@@ -28,7 +28,8 @@ class HistoryShimmer extends StatelessWidget {
                 _buildShimmerRow(),
                 _buildShimmerRow(),
                 _buildShimmerRow(),
-                20.verticalSpace
+                _buildShimmerRow(),
+                10.verticalSpace
               ],
             ),
           ),
@@ -45,12 +46,12 @@ class HistoryShimmer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 14.sp,
+            height: 11.sp,
             width: 0.3.sw,
             color: Colors.grey.shade200,
           ),
           Container(
-            height: 14.sp,
+            height: 11.sp,
             width: 0.2.sw,
             color: Colors.grey.shade200,
           ),

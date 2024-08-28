@@ -37,6 +37,7 @@ class TopUpView extends ConsumerWidget {
             title: "Top Up Beneficiary",
             onTap: () {
               CustomNavigation().pop();
+              topUpViewModel.clearForm();
             }),
         body: SingleChildScrollView(
           child: Padding(
@@ -48,8 +49,8 @@ class TopUpView extends ConsumerWidget {
                 infoTile("Beneficiary Name:", beneficiary.name,
                     AppColors.primaryColor),
                 infoTile("Number:", beneficiary.number, AppColors.greyColor),
-                infoTile("Remaining Monthly limit:", "459 AED",
-                    AppColors.blackColor),
+                infoTile("Remaining Monthly limit:",
+                    "${beneficiary.remaining} AED", AppColors.blackColor),
                 AmountGridView(topUpViewModelProvider: topUpViewModelProvider),
                 PurposeDropDown(topUpViewModelProvider: topUpViewModelProvider),
                 NotesFormField(topUpViewModelProvider: topUpViewModelProvider),
@@ -63,19 +64,7 @@ class TopUpView extends ConsumerWidget {
             isEnable: topUpViewModel.isBtnEnable,
             bgColor: AppColors.primaryColor,
             onPressed: () async {
-              Transaction transaction = Transaction(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  userId: 1,
-                  beneficiaryId: beneficiary.id,
-                  amount: topUpViewModel.selectedAmount!,
-                  createdAt: DateTime.now(),
-                  purpose: topUpViewModel.selectedPurpose!,
-                  note: topUpViewModel.notesController.text);
-              bool? isPayed =
-                  await DialogBoxUtils.show(Invoice(transaction: transaction));
-              if (isPayed ?? false) {
-                topUpViewModel.topUp(transaction, beneficiary);
-              }
+              await topUpViewModel.validatePayment(beneficiary);
             },
             title: "Proceed",
           ),

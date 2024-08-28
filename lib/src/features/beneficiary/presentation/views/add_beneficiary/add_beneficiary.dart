@@ -10,6 +10,8 @@ import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
 import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/text_field_validator.dart';
+import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
+import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
 
 class AddBeneficiary extends ConsumerWidget {
@@ -54,7 +56,6 @@ class AddBeneficiary extends ConsumerWidget {
                           validator: TextFieldValidator.validatePersonName);
                     },
                   ),
-
                   20.verticalSpace,
                   CustomInputField(
                     controller: beneficiaryViewModel.numberCon,
@@ -85,7 +86,18 @@ class AddBeneficiary extends ConsumerWidget {
             isEnable: beneficiaryViewModel.isBtnEnable,
             bgColor: AppColors.primaryColor,
             onPressed: () {
-              beneficiaryViewModel.addBeneficiary();
+              double initialMonthlyLimit =
+                  user?.status == UserStatus.verified ? 500 : 1000;
+              final newBeneficiary = BeneficiaryModel(
+                  id: DateTime.now().microsecondsSinceEpoch,
+                  name: beneficiaryViewModel.nickNameCon.controller.text,
+                  number:
+                      "+971${beneficiaryViewModel.numberCon.controller.text}",
+                  userId: user!.id,
+                  monthlyLimit: initialMonthlyLimit,
+                  remaining: initialMonthlyLimit,
+                  createdAt: DateTime.now());
+              beneficiaryViewModel.addBeneficiary(newBeneficiary);
             },
           ),
         ),
@@ -99,13 +111,9 @@ class AddBeneficiary extends ConsumerWidget {
       children: [
         50.verticalSpace,
         Text("Note :", style: PoppinsStyles.medium.copyWith(fontSize: 18.sp)),
-        20.verticalSpace,
-        infoPointsWidget("You are not verified"),
-        10.verticalSpace,
-        infoPointsWidget("You can send max 1000 AED per month per beneficiary"),
         10.verticalSpace,
         infoPointsWidget(
-            "You can  top up multiple beneficiaries but is limited to a total of AED 3,000 per month for all beneficiaries."),
+            "You can send a maximum of ${user?.status == UserStatus.verified ? '500' : '1000'} AED per month per beneficiary."),
         20.verticalSpace,
       ],
     );

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_text_controller.dart';
+import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/enums/snackbar_status.dart';
 import 'package:technical_assessment_flutter/src/core/utilities/snack_bar.dart';
 import 'package:technical_assessment_flutter/src/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:technical_assessment_flutter/src/features/auth/domain/repositories/auth_repository.dart';
-import 'package:technical_assessment_flutter/src/features/home/presentation/views/home_screen.dart';
+import 'package:technical_assessment_flutter/src/features/home/presentation/views/home_view.dart';
 
 class LoginViewModel with ChangeNotifier {
   final AuthRepository _authRepository = AuthRepositoryImpl();
@@ -64,12 +65,16 @@ class LoginViewModel with ChangeNotifier {
     try {
       setLoading(true);
 
-      final body = {
+     /* final body = {
         "email": emailCon.controller.text,
         "password": passwordCon.controller.text,
       };
-      await _authRepository.login(body: body);
-      CustomNavigation().pushAndRemoveUntil(HomeScreen(), animate: false);
+       user = await _authRepository.login(body: body);*/
+
+      /// temporary
+      user = notVerifiedUser;
+
+      CustomNavigation().pushAndRemoveUntil(HomeView(), animate: false);
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error);
     } finally {

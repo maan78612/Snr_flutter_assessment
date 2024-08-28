@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:technical_assessment_flutter/src/core/commons/custom_navigation.dart';
-import 'package:technical_assessment_flutter/src/features/auth/presentation/views/login_screen.dart';
+import 'package:technical_assessment_flutter/src/features/auth/presentation/views/login_view.dart';
 import 'package:technical_assessment_flutter/src/features/splash/data/repositories/splash_repository_impl.dart';
 import 'package:technical_assessment_flutter/src/features/splash/domain/repositories/splash_repository.dart';
 
@@ -31,7 +31,7 @@ class SplashViewModel extends ChangeNotifier {
       if (_controller.status == AnimationStatus.completed) {
         // Wait for 1 second before navigating
         await Future.delayed(const Duration(milliseconds: 1000));
-        CustomNavigation().pushAndRemoveUntil(LoginScreen(), animate: false);
+        CustomNavigation().pushAndRemoveUntil(LoginView(), animate: false);
       }
     });
   }

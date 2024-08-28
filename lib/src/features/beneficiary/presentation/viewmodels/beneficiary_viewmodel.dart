@@ -74,28 +74,34 @@ class BeneficiaryViewModel extends ChangeNotifier {
 
   void clearForm() {
     nickNameCon.controller.clear();
-    nickNameCon.error=null;
+    nickNameCon.error = null;
     numberCon.controller.clear();
-    numberCon.error=null;
+    numberCon.error = null;
     _isBtnEnable = false;
     notifyListeners();
   }
 
-  Future<void> addBeneficiary() async {
+  Future<void> addBeneficiary(BeneficiaryModel beneficiary) async {
+    beneficiary.toJson();
     try {
+      if (beneficiaryList.length >= 5) {
+        throw "You have reached maximum limit of 5  for adding beneficiary";
+      }
       setLoading(true);
 
-      final body = {
-        "name": nickNameCon.controller.text,
-        "phoneNumber": "+971${numberCon.controller.text}",
-        "limit": 500,
-        "user_id": "user-123",
-      };
-      await _beneficiaryRepository.addBeneficiary(body: body);
+      beneficiaryList.add(beneficiary);
+      //
+      // final body = {
+      //   "name": beneficiary.name,
+      //   "phoneNumber": beneficiary.number,
+      //   "limit": beneficiary.monthlyLimit,
+      //   "user_id": beneficiary.userId,
+      // };
+      // await _beneficiaryRepository.addBeneficiary(body: body);
 
       await DialogBoxUtils.show(
         SuccessDialog(
-          text: 'You added ${nickNameCon.controller.text} as a beneficiary',
+          text: 'You added ${beneficiary.name} as a beneficiary',
           heading: 'Congratulations!',
           img: AppImages.successIcon,
         ),
@@ -103,7 +109,29 @@ class BeneficiaryViewModel extends ChangeNotifier {
       clearForm();
       CustomNavigation().pop();
     } catch (e) {
-      SnackBarUtils.show(e.toString(), SnackBarType.error);
+      SnackBarUtils.show(e.toString(), SnackBarType.error, seconds: 4);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> deleteBeneficiary(BeneficiaryModel beneficiary) async {
+    beneficiary.toJson();
+    try {
+      setLoading(true);
+      // await _beneficiaryRepository.deleteBeneficiary();
+      beneficiaryList.remove(beneficiary);
+
+      await DialogBoxUtils.show(
+        SuccessDialog(
+          text: 'Beneficiary ${beneficiary.name} successfully deleted',
+          heading: 'Beneficiary Deleted!',
+          img: AppImages.successIcon,
+        ),
+      );
+      clearForm();
+    } catch (e) {
+      SnackBarUtils.show(e.toString(), SnackBarType.error, seconds: 4);
     } finally {
       setLoading(false);
     }
