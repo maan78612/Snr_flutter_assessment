@@ -29,7 +29,7 @@ class SplashViewModel extends ChangeNotifier {
 
     _controller.addListener(() async {
       if (_controller.status == AnimationStatus.completed) {
-        // Wait for 1 second before navigating
+        /// Wait for 1 second before navigating
         await Future.delayed(const Duration(milliseconds: 1000));
         CustomNavigation().pushAndRemoveUntil(LoginView(), animate: false);
       }

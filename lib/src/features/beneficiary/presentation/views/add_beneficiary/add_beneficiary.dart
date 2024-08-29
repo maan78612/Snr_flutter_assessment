@@ -11,9 +11,8 @@ import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/text_field_validator.dart';
 import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
-import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
-import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
+import 'package:technical_assessment_flutter/src/features/auth/domain/models/user_model.dart';
 
 class AddBeneficiary extends ConsumerWidget {
   final ChangeNotifierProvider<BeneficiaryViewModel>

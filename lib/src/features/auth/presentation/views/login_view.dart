@@ -9,8 +9,6 @@ import 'package:technical_assessment_flutter/src/core/constants/fonts.dart';
 import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/constants/images.dart';
 import 'package:technical_assessment_flutter/src/core/constants/text_field_validator.dart';
-import 'package:technical_assessment_flutter/src/core/enums/snackbar_status.dart';
-import 'package:technical_assessment_flutter/src/core/utilities/snack_bar.dart';
 import 'package:technical_assessment_flutter/src/features/auth/presentation/viewmodels/login_viewmodel.dart';
 
 class LoginView extends ConsumerWidget {

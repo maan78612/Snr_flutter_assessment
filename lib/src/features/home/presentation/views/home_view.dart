@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:technical_assessment_flutter/src/core/commons/loader.dart';
 import 'package:technical_assessment_flutter/src/core/constants/colors.dart';
+import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/enums/tab_bar_enum.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/home/presentation/viewmodels/home_viewmodel.dart';
@@ -14,7 +15,7 @@ import 'package:technical_assessment_flutter/src/features/top_up/presentation/vi
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/views/top_up_history.dart';
 
 class HomeView extends ConsumerStatefulWidget {
-  HomeView({super.key});
+  const HomeView({super.key});
 
   @override
   ConsumerState<HomeView> createState() => _HomeViewState();
@@ -39,7 +40,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeViewModelProvider).resetMonth(ref);
+      final user = ref.read(userModelProvider);
+      ref.read(homeViewModelProvider).resetMonth(user);
     });
 
     super.initState();

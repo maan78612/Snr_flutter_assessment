@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:technical_assessment_flutter/src/core/constants/api_urls.dart';
-import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/services/network/api_data_source.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/model/beneficiary.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/domain/repositories/beneficiary_repository.dart';
@@ -10,11 +7,11 @@ class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
   @override
   Future<List<BeneficiaryModel>> getBeneficiaries(String userId) async {
     try {
-      final response = await NetworkApi.instance
-          .get(url: "${ApiUrls.beneficiary}/$userId");
+      final response =
+          await NetworkApi.instance.get(url: "${ApiUrls.beneficiary}/$userId");
 
       return List<BeneficiaryModel>.from(
-          response.map((x) => BeneficiaryModel.fromJson(x)));
+          response.map((x) => BeneficiaryModel.fromJson(x))).reversed.toList();
     } catch (e) {
       rethrow;
     }

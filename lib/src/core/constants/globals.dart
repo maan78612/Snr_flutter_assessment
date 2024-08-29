@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
+import 'package:technical_assessment_flutter/src/features/auth/domain/models/user_model.dart';
 
 const int routingDuration = 300;
 double inputFieldHeight = 50.sp;

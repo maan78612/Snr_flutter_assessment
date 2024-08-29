@@ -7,7 +7,7 @@ import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/enums/user_status.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/viewmodels/beneficiary_viewmodel.dart';
 import 'package:technical_assessment_flutter/src/features/beneficiary/presentation/views/beneficiary_list/beneficiary_list_view.dart';
-import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
+import 'package:technical_assessment_flutter/src/features/auth/domain/models/user_model.dart';
 import 'package:technical_assessment_flutter/src/features/top_up/presentation/viewmodels/top_up_viewmodel.dart';
 
 class MobileRechargeView extends ConsumerStatefulWidget {
@@ -62,12 +62,12 @@ class _MobileRechargeViewState extends ConsumerState<MobileRechargeView> {
             Text("Note :",
                 style: PoppinsStyles.medium.copyWith(fontSize: 18.sp)),
             20.verticalSpace,
-            infoPointsWidget(user?.status == UserStatus.verified
+            infoPointsWidget(user.status == UserStatus.verified
                 ? "You are verified!"
                 : "You are not verified yet!"),
             10.verticalSpace,
             infoPointsWidget(
-                "You can send a maximum of ${user?.status == UserStatus.verified ? '500' : '1000'} AED per month per beneficiary."),
+                "You can send a maximum of ${user.status == UserStatus.verified ? '500' : '1000'} AED per month per beneficiary."),
             10.verticalSpace,
             infoPointsWidget(
                 "You can  top up multiple beneficiaries but is limited to a total of AED 3,000 per month for all beneficiaries."),
@@ -94,7 +94,7 @@ class _MobileRechargeViewState extends ConsumerState<MobileRechargeView> {
           child: Padding(
             padding: EdgeInsets.all(8.sp),
             child: Text(
-              "${user?.remainingMonthlyLimit.toStringAsFixed(1)} AED",
+              "${user.remainingMonthlyLimit.toStringAsFixed(1)} AED",
               style: PoppinsStyles.bold
                   .copyWith(fontSize: 14.sp, color: AppColors.whiteColor),
             ),

@@ -1,7 +1,7 @@
 import 'package:technical_assessment_flutter/src/core/constants/api_urls.dart';
 import 'package:technical_assessment_flutter/src/core/services/network/api_data_source.dart';
 import 'package:technical_assessment_flutter/src/features/auth/domain/repositories/auth_repository.dart';
-import 'package:technical_assessment_flutter/src/features/home/domain/models/user_model.dart';
+import 'package:technical_assessment_flutter/src/features/auth/domain/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   @override

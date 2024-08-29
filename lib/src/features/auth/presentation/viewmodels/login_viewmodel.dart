@@ -10,58 +10,59 @@ import 'package:technical_assessment_flutter/src/features/auth/domain/repositori
 import 'package:technical_assessment_flutter/src/features/home/presentation/views/home_view.dart';
 
 class LoginViewModel with ChangeNotifier {
+  // Repository for authentication-related operations
   final AuthRepository _authRepository = AuthRepositoryImpl();
 
+  // Controllers for email and password input fields
   CustomTextController emailCon = CustomTextController(
-      controller: TextEditingController(), focusNode: FocusNode());
-  CustomTextController passwordCon = CustomTextController(
-      controller: TextEditingController(), focusNode: FocusNode());
+    controller: TextEditingController(),
+    focusNode: FocusNode(),
+  );
 
+  CustomTextController passwordCon = CustomTextController(
+    controller: TextEditingController(),
+    focusNode: FocusNode(),
+  );
+
+  // Loading state to indicate when a process is running
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  // State to manage whether the login button should be enabled
   bool _isBtnEnable = false;
 
   bool get isBtnEnable => _isBtnEnable;
 
+  /// Sets the loading state and notifies listeners.
   void setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
   }
 
-  void onChange(
-      {required CustomTextController con,
-      String? Function(String?)? validator,
-      required String value}) {
+  /// Handles changes in the input fields, performs validation, and updates the button state.
+  void onChange({
+    required CustomTextController con,
+    String? Function(String?)? validator,
+    required String value,
+  }) {
     if (validator != null) {
       con.error = validator(value);
     }
     setEnableBtn();
   }
 
+  /// Determines if the login button should be enabled based on input validation.
   void setEnableBtn() {
-    if (emailCon.controller.text.isNotEmpty &&
-        passwordCon.controller.text.isNotEmpty) {
-      if (emailCon.error == null && passwordCon.error == null) {
-        _isBtnEnable = true;
-      } else {
-        _isBtnEnable = false;
-      }
-    } else {
-      _isBtnEnable = false;
-    }
+    _isBtnEnable = emailCon.controller.text.isNotEmpty &&
+        passwordCon.controller.text.isNotEmpty &&
+        emailCon.error == null &&
+        passwordCon.error == null;
 
     notifyListeners();
   }
 
-  clearForm() {
-    emailCon = CustomTextController(
-        controller: TextEditingController(), focusNode: FocusNode());
-    passwordCon = CustomTextController(
-        controller: TextEditingController(), focusNode: FocusNode());
-    notifyListeners();
-  }
-
+  /// Attempts to log the user in by communicating with the authentication repository.
   Future<void> login(WidgetRef ref) async {
     try {
       setLoading(true);
@@ -70,12 +71,17 @@ class LoginViewModel with ChangeNotifier {
         "email": emailCon.controller.text,
         "password": passwordCon.controller.text,
       };
+
+      // Attempt to login using the provided credentials
       final loginUser = await _authRepository.login(body: body);
 
+      // Save the logged-in user data to the global user model
       ref.read(userModelProvider.notifier).setUser(loginUser);
 
-      CustomNavigation().pushAndRemoveUntil(HomeView(), animate: false);
+      // Navigate to the home view, replacing all previous routes
+      CustomNavigation().pushAndRemoveUntil(const HomeView(), animate: false);
     } catch (e) {
+      // Show an error message if login fails
       SnackBarUtils.show(e.toString(), SnackBarType.error);
     } finally {
       setLoading(false);

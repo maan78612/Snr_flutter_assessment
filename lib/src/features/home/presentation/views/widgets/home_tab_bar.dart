@@ -22,7 +22,7 @@ class HomeTabBar extends ConsumerWidget {
       padding: EdgeInsets.all(4.sp),
       margin: EdgeInsets.symmetric(horizontal: hMargin),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(24.r)),
+        borderRadius: BorderRadius.all(Radius.circular(32.r)),
         color: AppColors.primaryColor.withOpacity(0.2),
       ),
       child: Stack(

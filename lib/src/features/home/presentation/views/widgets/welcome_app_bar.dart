@@ -12,8 +12,8 @@ class WelcomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const WelcomeAppBar({super.key});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    final user=ref.watch(userModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userModelProvider);
     return ClipPath(
       clipper: WaveClipperOne(
         flip: true,
@@ -42,7 +42,7 @@ class WelcomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     ),
                     7.verticalSpace,
                     Text(
-                      "${ref.read(userModelProvider)?.name}",
+                      user.name,
                       style: PoppinsStyles.bold.copyWith(
                           fontSize: 24.sp, color: AppColors.whiteColor),
                     ),
@@ -73,8 +73,7 @@ class WelcomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             color: AppColors.whiteColor),
                       ),
                       TextSpan(
-                        text:
-                            "${"${user?.availableBalance.toStringAsFixed(1)}"} AED",
+                        text: "${user.availableBalance.toStringAsFixed(1)} AED",
                         style: PoppinsStyles.bold.copyWith(
                             fontSize: 18.sp, color: AppColors.whiteColor),
                       ),
@@ -82,7 +81,7 @@ class WelcomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ),
                 const Spacer(),
-                StatusBadge(status: user!.status),
+                StatusBadge(status: user.status),
               ],
             ),
             10.verticalSpace,

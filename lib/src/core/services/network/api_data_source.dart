@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:technical_assessment_flutter/src/core/constants/globals.dart';
 import 'package:technical_assessment_flutter/src/core/services/network/app_exceptions.dart';
 
 class NetworkApi {
@@ -25,7 +24,7 @@ class NetworkApi {
 
   Future<bool> checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult == ConnectivityResult.none;
+    return connectivityResult.contains(ConnectivityResult.none);
   }
 
   Future<dynamic> get({
@@ -240,13 +239,13 @@ class NetworkApi {
     Map<String, dynamic>? params,
     required Map<String, dynamic> apiHeader,
   }) {
-    debugPrint(
+    log(
         "------------------------- $methodType ---------------------------");
-    debugPrint("URL: $url");
-    if (body != null) debugPrint("Body: $body");
-    if (params != null) debugPrint("Params: $params");
-    debugPrint("Headers: $apiHeader");
-    debugPrint(
+    log("URL: $url");
+    if (body != null) log("Body: $body");
+    if (params != null) log("Params: $params");
+    log("Headers: $apiHeader");
+    log(
         "-------------------------------------------------------------------");
   }
 }
