@@ -72,7 +72,9 @@ efficiently.
 
 - **Frontend**: Flutter
 - **State Management**: Riverpod
+- **Project Architecture**: Using Clean Architecture
 - **Backend**: Node.js (with a free server deployment)
+
 
 ---
 
