@@ -33,32 +33,41 @@ efficiently.
     - Navigate to the top-up screen.
     - Delete beneficiary button.
     - Shows user info and account limitations.
+    - [<img src="screenshots/mobile_recharge.png" width="250"/>](screenshots/mobile_recharge.png)
 
 3. **Delete Beneficiary Confirmation**
 
     - A confirmation dialog when attempting to delete a beneficiary.
     - Shows a "Beneficiary deleted successfully" dialog.
+    - [<img src="screenshots/deleyte_beneficiary_bottom_sheet.png" width="250"/>](screenshots/deleyte_beneficiary_bottom_sheet.png)
+    - [<img src="screenshots/beneficiary_deleted_success.png" width="250"/>](screenshots/beneficiary_deleted_success.png)
 
 4. **Add Beneficiary**
 
     - Add a beneficiary by providing their name and number.
     - Displays a "Beneficiary added successfully" dialog.
+    - [<img src="screenshots/add_beneficiary.png" width="250"/>](screenshots/add_beneficiary.png)
+    - [<img src="screenshots/beneficiary_added_success.png" width="250"/>](screenshots/beneficiary_added_success.png)
 
 5. **Transaction History Screen**
 
     - Displays beneficiaries and their respective transactions.
     - Shows transaction purposes, amounts, and dates.
+    - [<img src="screenshots/transaction_history.png" width="250"/>](screenshots/transaction_history.png)
 
 6. **Transaction Screen**
 
     - Displays beneficiary and user details.
     - Select top-up amount and purpose.
     - Option to add notes for the transaction.
+    - [<img src="screenshots/top_up.png" width="250"/>](screenshots/top_up.png)
 
 7. **Top-up Invoice Screen Dialog**
 
     - Provides a summary of the total recharge amount, including service charges.
     - Shows a "Transaction completed successfully" dialog.
+    - [<img src="screenshots/invoice.png" width="250"/>](screenshots/invoice.png)
+    - [<img src="screenshots/payment_sent_success.png" width="250"/>](screenshots/payment_sent_success.png)
 
 ---
 
