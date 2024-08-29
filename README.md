@@ -25,6 +25,7 @@ efficiently.
 1. **Login Screen**
 
     - The login page allows users to authenticate their accounts.
+    - ![login.png](..%2F..%2F..%2F..%2FDownloads%2Fjpg2png%2Flogin.png)
 
 2. **Mobile Recharge Screen**
 
@@ -74,3 +75,17 @@ efficiently.
 1. Clone the repository:
    ```bash
    git clone https://github.com/maan78612/Snr_flutter_assessment.git
+
+2. Navigate to the project directory:
+   ```bash
+   cd your-project-directory
+   ```
+
+3. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+4. Run the app:
+   ```bash
+   flutter run
