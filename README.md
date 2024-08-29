@@ -25,7 +25,7 @@ efficiently.
 1. **Login Screen**
 
     - The login page allows users to authenticate their accounts.
-    - ![login.png]<img src="screenshots%2Flogin.png" width="200">
+    - [<img src="screenshots/login.png" width="250"/>](screenshots/login.png)
 
 2. **Mobile Recharge Screen**
 
