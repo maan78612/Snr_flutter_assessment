@@ -39,8 +39,7 @@ efficiently.
 
     - A confirmation dialog when attempting to delete a beneficiary.
     - Shows a "Beneficiary deleted successfully" dialog.
-    - [<img src="screenshots/deleyte_beneficiary_bottom_sheet.png" width="250"/>](screenshots/deleyte_beneficiary_bottom_sheet.png)
-    - [<img src="screenshots/beneficiary_deleted_success.png" width="250"/>](screenshots/beneficiary_deleted_success.png)
+    - [<img src="screenshots/deleyte_beneficiary_bottom_sheet.png" width="250"/>](screenshots/deleyte_beneficiary_bottom_sheet.png) [<img src="screenshots/beneficiary_deleted_success.png" width="250"/>](screenshots/beneficiary_deleted_success.png)
 
 4. **Add Beneficiary**
 
