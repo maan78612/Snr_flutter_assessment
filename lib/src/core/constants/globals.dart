@@ -9,6 +9,6 @@ String? fcmToken;
 
 /// Create StateNotifierProvider for user to change it's state when data change locally
 final userModelProvider =
-    StateNotifierProvider<UserModelNotifier, UserModel>((ref) {
-  return UserModelNotifier();
+    StateNotifierProvider<UserModelProvider, UserModel>((ref) {
+  return UserModelProvider();
 });

@@ -26,10 +26,11 @@ class HistoryScreen extends ConsumerStatefulWidget {
 class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   @override
   void initState() {
+    final topUpViewModel = ref.read(widget.topUpViewModelProvider);
+    final userID = ref.read(userModelProvider).id;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(widget.topUpViewModelProvider)
-          .getTransactionHistory(ref.read(userModelProvider).id);
+      topUpViewModel.getTransactionHistory(userID);
     });
 
     super.initState();
@@ -51,7 +52,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                           topUpViewModel.transactionHistory[index];
 
                       return _buildHistoryItem(
-                          transaction.beneficiary, transaction);
+                          transaction.beneficiary!, transaction);
                     }),
                   )
                 : Center(

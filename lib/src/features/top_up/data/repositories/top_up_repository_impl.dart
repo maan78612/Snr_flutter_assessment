@@ -10,9 +10,12 @@ class TopUpRepositoryImpl implements TopUpRepository {
     try {
       final response = await NetworkApi.instance
           .get(url: "${ApiUrls.transactionHistory}$userId");
-      return List<Transaction>.from(
-          response.map((x) => Transaction.fromJson(x)));
 
+      return List<Transaction>.from(
+        response
+            .map((x) => Transaction.fromJson(x))
+            .where((transaction) => transaction.beneficiary != null),
+      );
     } catch (e) {
       rethrow;
     }

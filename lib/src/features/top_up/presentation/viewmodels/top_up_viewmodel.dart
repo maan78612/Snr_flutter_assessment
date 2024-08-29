@@ -44,12 +44,9 @@ class TopUpViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<void> getTransactionHistory(String userId) async {
     try {
       setLoading(true);
-      await Future.delayed(const Duration(milliseconds: 1000));
       transactionHistory = await _topUpRepository.getTransactionHistory(userId);
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error);
@@ -75,7 +72,8 @@ class TopUpViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> validatePayment(BeneficiaryModel beneficiary, WidgetRef ref) async {
+  Future<void> validatePayment(
+      BeneficiaryModel beneficiary, WidgetRef ref) async {
     try {
       // Show Invoice dialog and proceed based on user's response
       bool? willProceed = await DialogBoxUtils.show(Invoice(
@@ -95,7 +93,7 @@ class TopUpViewModel extends ChangeNotifier {
           throw "Beneficiary's remaining limit for top-up is less than AED ${totalAmount.toStringAsFixed(2)}.";
         }
 
-        await proceedPayment(totalAmount, beneficiary,ref);
+        await proceedPayment(totalAmount, beneficiary, ref);
       }
     } catch (e) {
       SnackBarUtils.show(e.toString(), SnackBarType.error, seconds: 4);
@@ -105,7 +103,7 @@ class TopUpViewModel extends ChangeNotifier {
   Future<void> proceedPayment(
       double totalAmount, BeneficiaryModel beneficiary, WidgetRef ref) async {
     try {
-      final user=ref.read(userModelProvider);
+      final user = ref.read(userModelProvider);
       setLoading(true);
       final body = {
         "user_id": user.id,
@@ -122,8 +120,8 @@ class TopUpViewModel extends ChangeNotifier {
       /// if there is an error below code will not execute because of try catch
       ///  So local variable will not change in that case
 
-      ref.read(userModelProvider.notifier).updateBalance(user.availableBalance-totalAmount);
-      ref.read(userModelProvider.notifier).updateMonthlyLimit(user.remainingMonthlyLimit-totalAmount);
+      ref.read(userModelProvider.notifier).updateBalance(totalAmount);
+      ref.read(userModelProvider.notifier).updateMonthlyLimit(totalAmount);
 
       beneficiary.remaining = beneficiary.remaining - totalAmount;
 

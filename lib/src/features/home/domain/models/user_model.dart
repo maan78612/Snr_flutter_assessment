@@ -98,18 +98,21 @@ class UserModel {
   }
 }
 
-class UserModelNotifier extends StateNotifier<UserModel> {
-  UserModelNotifier() : super(UserModel.empty());
+class UserModelProvider extends StateNotifier<UserModel> {
+  UserModelProvider() : super(UserModel.empty());
 
   void setUser(UserModel newUser) {
     state = newUser;
   }
 
-  void updateBalance(double newBalance) {
-    state = state.copyWith(availableBalance: newBalance);
+  void updateBalance(double amount) {
+    /// update user model with new available balance
+    state = state.copyWith(availableBalance: state.availableBalance - amount);
   }
 
-  void updateMonthlyLimit(double newLimit) {
-    state = state.copyWith(remainingMonthlyLimit: newLimit);
+  void updateMonthlyLimit(double amount) {
+    /// update user model with new limit
+    state = state.copyWith(
+        remainingMonthlyLimit: state.remainingMonthlyLimit - amount);
   }
 }

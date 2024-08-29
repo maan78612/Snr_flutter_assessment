@@ -38,20 +38,6 @@ class BeneficiaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-  Future<void> getBeneficiaries(String userId) async {
-    try {
-      setLoading(true);
-      await Future.delayed(const Duration(milliseconds: 1000));
-      beneficiaryList = await _beneficiaryRepository.getBeneficiaries(userId);
-    } catch (e) {
-      SnackBarUtils.show(e.toString(), SnackBarType.error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   void onChange({
     required CustomTextController con,
     String? Function(String?)? validator,
@@ -82,6 +68,18 @@ class BeneficiaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getBeneficiaries(String userId) async {
+    try {
+      setLoading(true);
+
+      beneficiaryList = await _beneficiaryRepository.getBeneficiaries(userId);
+    } catch (e) {
+      SnackBarUtils.show(e.toString(), SnackBarType.error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   Future<void> addBeneficiary(UserModel user) async {
     try {
       if (beneficiaryList.length >= 5) {
@@ -95,7 +93,7 @@ class BeneficiaryViewModel extends ChangeNotifier {
 
       final body = {
         "name": nickNameCon.controller.text,
-        "number": numberCon.controller.text,
+        "number": "+971${numberCon.controller.text}",
         "monthlyLimit": initialMonthlyLimit,
         "user_id": user.id,
       };

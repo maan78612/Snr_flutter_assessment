@@ -3,7 +3,7 @@ import 'package:technical_assessment_flutter/src/features/beneficiary/domain/mod
 class Transaction {
   String id;
   String userId;
-  BeneficiaryModel beneficiary;
+  BeneficiaryModel? beneficiary;
   int amount;
   String purpose;
   String note;
@@ -22,7 +22,9 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["_id"],
         userId: json["user_id"],
-        beneficiary: BeneficiaryModel.fromJson(json["beneficiary_id"]),
+        beneficiary: json["beneficiary_id"] != null
+            ? BeneficiaryModel.fromJson(json["beneficiary_id"])
+            : null,
         amount: json["amount"],
         purpose: json["purpose"],
         note: json["note"],
@@ -32,7 +34,7 @@ class Transaction {
   Map<String, dynamic> toJson() => {
         "_id": id,
         "user_id": userId,
-        "beneficiary_id": beneficiary.toJson(),
+        "beneficiary_id": beneficiary?.toJson(),
         "amount": amount,
         "purpose": purpose,
         "note": note,
