@@ -45,8 +45,7 @@ efficiently.
 
     - Add a beneficiary by providing their name and number.
     - Displays a "Beneficiary added successfully" dialog.
-    - [<img src="screenshots/add_beneficiary.png" width="250"/>](screenshots/add_beneficiary.png)
-    - [<img src="screenshots/beneficiary_added_success.png" width="250"/>](screenshots/beneficiary_added_success.png)
+    - [<img src="screenshots/add_beneficiary.png" width="250"/>](screenshots/add_beneficiary.png) [<img src="screenshots/beneficiary_added_success.png" width="250"/>](screenshots/beneficiary_added_success.png)
 
 5. **Transaction History Screen**
 
@@ -65,8 +64,7 @@ efficiently.
 
     - Provides a summary of the total recharge amount, including service charges.
     - Shows a "Transaction completed successfully" dialog.
-    - [<img src="screenshots/invoice.png" width="250"/>](screenshots/invoice.png)
-    - [<img src="screenshots/payment_sent_success.png" width="250"/>](screenshots/payment_sent_success.png)
+    - [<img src="screenshots/invoice.png" width="250"/>](screenshots/invoice.png) [<img src="screenshots/payment_sent_success.png" width="250"/>](screenshots/payment_sent_success.png)
 
 ---
 

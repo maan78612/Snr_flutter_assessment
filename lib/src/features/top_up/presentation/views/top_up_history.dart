@@ -93,6 +93,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 '${transaction.amount.toStringAsFixed(2)} AED'),
             _buildRow('Date:', transaction.createdAt.toString().split(' ')[0]),
             10.verticalSpace,
+            if (transaction.note.isNotEmpty) ...[
+              const Divider(),
+              _buildNotes('Notes:', transaction.note),
+            ]
           ],
         ),
       ),
@@ -114,9 +118,35 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           ),
           Text(
             value,
+            style: PoppinsStyles.regular.copyWith(fontSize: 14.sp),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotes(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.sp),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            label,
             style: PoppinsStyles.regular.copyWith(
               fontSize: 14.sp,
-              color: Colors.black,
+              color: AppColors.blackColor,
+            ),
+          ),
+          const Spacer(),
+          Expanded(
+            flex: 2,
+            child: Text(
+              value,
+              textAlign: TextAlign.left,
+              style: PoppinsStyles.regular
+                  .copyWith(fontSize: 12.sp, color: Colors.black54),
             ),
           ),
         ],

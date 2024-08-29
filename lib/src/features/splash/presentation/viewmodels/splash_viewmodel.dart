@@ -19,7 +19,7 @@ class SplashViewModel extends ChangeNotifier {
   /// Initialization function to setup the animation controller
   void initFunc(TickerProvider tickerProvider) {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1500),
       vsync: tickerProvider,
     );
 
